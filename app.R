@@ -3,7 +3,7 @@ library(shiny)
 # Define UI
 ui <- fluidPage(
   
-  # Application title
+  # Application title (change tha app name when desired the dataset )
   titlePanel("Your Shiny Application"),
   
   # Tab layout
@@ -25,7 +25,7 @@ ui <- fluidPage(
       # - Layout elements (sidebar, columns, etc.)
       # ==============================================
       
-      # Example placeholder content:
+      # Example placeholder content: <---this is shows to display the content of tab1 , please delete it when working 
       h3("Content for Tab 1"),
       p("Add your content here..."),
       
@@ -40,7 +40,7 @@ ui <- fluidPage(
     # TAB 2: [TAB NAME] - POSITION INDEX 2
     # =====================================================
     tabPanel(
-      title = "Tab 2: Data Visualization",  # Change this title
+      title = "Tab 2: Data Visualization",  # Change this title( if necessary )
       value = "tab2",
       
       # ==============================================
@@ -52,7 +52,7 @@ ui <- fluidPage(
       # - Visualization controls
       # ==============================================
       
-      # Example placeholder content:
+      # Example placeholder content: 
       h3("Content for Tab 2"),
       p("Add your visualizations here..."),
       
@@ -144,4 +144,4 @@ server <- function(input, output, session) {
 }
 
 # Run the application
-shinyApp(ui = ui, server = server)
+shinyApp(ui=ui, server=server )
