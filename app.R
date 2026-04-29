@@ -96,9 +96,9 @@ ui <- fluidPage(
     # =====================================================
     # Uncomment the code below to add a 4th tab
     
-    # tabPanel(
-    #   title = "Tab 4: Reports/Export",  # Change this title
-    #   value = "tab4",
+     tabPanel(
+       title = "Tab 4: Reports/Export",  # Change this title
+      value = "tab4",
     #   
     #   # ==============================================
     #   # START OF CONTENT FOR TAB 4
@@ -115,7 +115,7 @@ ui <- fluidPage(
     #   # ==============================================
     #   # END OF CONTENT FOR TAB 4
     #   # ==============================================
-    # )
+    )
   )
 )
 
