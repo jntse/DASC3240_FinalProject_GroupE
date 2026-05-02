@@ -28,7 +28,7 @@ ui <- fluidPage(
         hr(),
         
         h5('License:'),
-        a("CC BY 4.0", herf="https://creativecommons.org/licenses/by/4.0/deed.en")
+        a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
       )
       
  
