@@ -124,16 +124,17 @@ server <- function(input, output, session) {
   # =====================================================
   
   #create the features data frame 
-  feature_df <- data.frame(
+  feature_df <-  reactive({
+    data.frame(
     Feature = c("Pregnancies", "Glucose", "Blood Pressure", "Skin Thickness", 
                 "Insulin", "BMI", "Diabetes Pedigree function", "Age", "Outcome"),
     Description = c("Number of pregnancies", "Plasma glucose from glucose test (mg/dL)", "Blood pressure (mm Hg)",
                     "Skin thickness(mm)", "Insulin level", "Body mass index(weight/height)",
                     "likelihood of diabetes based on family history index  , from(0-2.5)", "Age in years", "Diabetes (1=Yes, 0=No)"))
-  
+  })
   # use table to visualise the features explanation
   output$feature_table <- renderTable({
-    feature_df  
+    feature_df()  
   }, striped = TRUE, hover = TRUE, bordered = TRUE)
   
   
@@ -146,6 +147,8 @@ server <- function(input, output, session) {
   # SERVER LOGIC FOR TAB 3 (INDEX 3)
   # =====================================================
   # Add reactive expressions, outputs for Tab 3 here
+  
+  
   
   # =====================================================
   # SERVER LOGIC FOR TAB 4 (INDEX 4) - OPTIONAL
