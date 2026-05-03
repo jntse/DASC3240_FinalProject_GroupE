@@ -1,9 +1,9 @@
-### About the data(Pima Indians Diabetes )
+### About the data (Pima Indians Diabetes)
 
-This [PIDD](https://data.mendeley.com/datasets/7zcc8v6hvp/1) dataset, measuring from National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK) from US , is a medical dataset investigate female patients in pima Indian region(which is the **highest incidence region in type 2 diabetes around the world**) to predict the occurence of diabates. This dataset records the female of at least  21 years old , including **9 features factors(8 meidcal predictors  + Binary outcome (diabetes diagnosis))**.
+The Pima Indians Diabetes Dataset ([PIDD](https://data.mendeley.com/datasets/7zcc8v6hvp/1)) is taken from the National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK) in the US. It is a medical dataset used to predict the occurence of diabetes by investigating female individuals in the Pima Indian Region (which has the **highest incident rate of type 2 diabetes in the world**). This dataset records the medical information of female individuals starting from at least 21 years old and includes **9 variable factors (8 medical predictors + Binary outcome (diabetes diagnosis))**.
 
-Based on the Visualisation, we can provide the insight on which factors contributed a lot in the risk of diabetes.
+Based on the visualization of data, we can provide the insight on which factors contributed a lot in the risk of diabetes.
 
-### DATA Details
+### Dataset Details
 
 The dataset includes the following variables:

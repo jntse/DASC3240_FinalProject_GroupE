@@ -1,157 +1,222 @@
-#load library 
+# Load library 
 library(shiny)
-library(readxl)
-library(dplyr)
+library(tidyverse)
 library(plotly)
+library(markdown)
+library(readxl)
+
+# Load and clean data
+pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names = FALSE) %>%
+  mutate(
+    Glucose = na_if(Glucose, 0),
+    `Body mass index` = na_if(`Body mass index`, 0),
+    Insulin = na_if(Insulin, 0),
+    Outcome = factor(Outcome, levels = c(0, 1), labels = c("Non-diabetic", "Diabetic"))
+  )
 
 # Define UI
 ui <- fluidPage(
   
-  # Application title (change tha app name when desired the dataset )
-  titlePanel("Your Shiny Application"),
+  # Application title 
+  titlePanel("Diabetes Risk Factors: Inside the Pima Indian Data"),
   
   # Tab layout
   tabsetPanel(
+
+    # =====================================================
+    # TAB 1: [Dataset introduction] - POSITION INDEX 1
+    # =====================================================
     
-    # =====================================================
-    # TAB 1: [TAB NAME] - POSITION INDEX 1
-    # =====================================================
     tabPanel(
-      title = "Tab 1: Data Overview",  # Change this title
+      title = "Tab 1: Dataset introduction",  
       value = "tab1",
-      
-      # ==============================================
-      # START OF CONTENT FOR TAB 1
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR CONTENT HERE:
-      # - Input controls (sliders, dropdowns, etc.)
-      # - Output displays (plots, tables, text)
-      # - Layout elements (sidebar, columns, etc.)
-      # ==============================================
-      
-      # Example placeholder content: <---this is shows to display the content of tab1 , please delete it when working 
-      h3("Content for Tab 1"),
-      p("Add your content here..."),
-      
-      # Remove the example above and paste your code here
-      
-      # ==============================================
-      # END OF CONTENT FOR TAB 1
-      # ==============================================
-    ),
-    
-    # =====================================================
-    # TAB 2: [TAB NAME] - POSITION INDEX 2
-    # =====================================================
-    tabPanel(
-      title = "Tab 2: Data Visualization",  # Change this title( if necessary )
-      value = "tab2",
-      
-      # ==============================================
-      # START OF CONTENT FOR TAB 2
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR VISUALIZATION CODE HERE:
-      # - Plot outputs (ggplotly, plotly, ggplot2)
-      # - Interactive charts
-      # - Visualization controls
-      # ==============================================
-      
-      # Example placeholder content: 
-      h3("Content for Tab 2"),
-      p("Add your visualizations here..."),
-      
-      # Remove the example above and paste your code here
-      
-      # ==============================================
-      # END OF CONTENT FOR TAB 2
-      # ==============================================
-    ),
-    
-    # =====================================================
-    # TAB 3: [TAB NAME] - POSITION INDEX 3
-    # =====================================================
-    tabPanel(
-      title = "Tab 3: Visualization of age and glucose",  # Change this title
-      value = "tab3",
-      
-      includeMarkdown("tab3_description.md"),
-      
+      includeMarkdown("tab1_description.md"),
       
       mainPanel(
-        
+       
         tableOutput("feature_table"),
         hr(),
         
         h5('License:'),
         a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
-      ),
-      
-      selectizeInput(
-        inputId = "outcome",
-        label = "Select Diabetes Outcome",
-        choices = c("All" = "All", "No Diabetes" = "0", "Diabetes" = "1"),
-        selected = "All"
-      ),
-      
-      sliderInput(
-        inputId = "age_range",
-        label = "Select Age Range",
-        min = 20,
-        max = 85,
-        value = c(20, 85),
-        step = 1
-      ),
-      
-      plotlyOutput(outputId = "p")
+      )
     ),
     
-    # ==============================================
-    # END OF CONTENT FOR TAB 3
-    # ==============================================
-  
-  # =====================================================
-  # TAB 4: [TAB NAME] - POSITION INDEX 4 (OPTIONAL)
-  # =====================================================
-  # Uncomment the code below to add a 4th tab
-  
-  tabPanel(
-    title = "Tab 4: Reports/Export",  # Change this title
-    value = "tab4",
-    #   
-    #   # ==============================================
-    #   # START OF CONTENT FOR TAB 4
-    #   # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    #   # ADD YOUR REPORT/EXPORT CODE HERE:
-    #   # - Download buttons
-    #   # - Report generation
-    #   # - Export functionality
-    #   # ==============================================
-    #   
-    #   h3("Content for Tab 4"),
-    #   p("Add your export/report code here..."),
-    #   
-    #   # ==============================================
-    #   # END OF CONTENT FOR TAB 4
-    #   # ==============================================
+    # =====================================================
+    # TAB 2: [General overview] - POSITION INDEX 2
+    # =====================================================
+    
+    tabPanel(
+      title = "General Overview",
+      value = "tab2",
+      
+      h3("Glucose Distribution by Diagnosis"),
+      p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses."),
+      
+      # 1. The Interactive Graph
+      plotlyOutput("glucosePlot", height = "500px"),
+      
+      # 2. Visual Divider
+      hr(),
+      
+      # 3. The Markdown Explanation
+      includeMarkdown("tab2_description.md")
+    ),
+    
+    # =====================================================
+    # TAB 3: [Age and glucose levels] - POSITION INDEX 3
+    # =====================================================
+    
+    tabPanel(
+      title = "Age and Glucose levels",
+      value = "tab3",
+      
+    includeMarkdown("tab3_description.md"),
+    
+    mainPanel(
+      
+      tableOutput("feature_table"),
+      hr(),
+      
+      h5('License:'),
+      a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
+    ),
+    
+    selectizeInput(
+      inputId = "outcome",
+      label = "Select Diabetes Outcome",
+      choices = c("All" = "All", "No Diabetes" = "0", "Diabetes" = "1"),
+      selected = "All"
+    ),
+    
+    sliderInput(
+      inputId = "age_range",
+      label = "Select Age Range",
+      min = 20,
+      max = 85,
+      value = c(20, 85),
+      step = 1
+    ),
+    
+    plotlyOutput(outputId = "p")
+  ),
+    # =====================================================
+    # TAB 4: [Metabolic profiles] - POSITION INDEX 4
+    # =====================================================
+    
+    tabPanel(
+      title = "Metabolic Profiles", 
+      value = "tab4",
+      # Title of the plot
+      h3("Metabolic profiles by Genetic Risk"),
+      p("The purpose of this faceted bubble plot is to provide an understanding of how metabolic health determines the outcome of diabetes (whether you have it or not). Hover over the points to see individual data, and adjust the slider to see the range of outcomes."),
+      
+      # Set layout of plot for better spacing
+      fluidRow(
+        column(width = 12,
+               plotlyOutput(outputId = "metabolic_plot", height = "500px")
+        )
+      ),
+      
+      br(), # <= empty line to seperate contents
+      
+      # Set layout of slider
+      fluidRow(
+        column(width = 8, offset = 1, # <= place slider to middle of graph
+               wellPanel(
+                 sliderInput(
+                   inputId = "genetic_risk", 
+                   label = "Genetic Risk Threshold (Diabetes Pedigree Function)", 
+                   min = min(pima_data$`Diabetes pedigree function`), 
+                   max = max(pima_data$`Diabetes pedigree function`), 
+                   value = c(min(pima_data$`Diabetes pedigree function`), 
+                             max(pima_data$`Diabetes pedigree function`)),
+                   step = 0.05, # <= set to cover all data
+                   width = "100%"
+                 )
+               )
+        )
+      ),
+      
+      hr(), # <= visual divider
+      
+      # Set layout of markdown content
+      fluidRow(
+        column(width = 12, #offset = 2,
+               includeMarkdown("tab4_description.md")
+        )
+      )
+    )
   )
-)
 )
 
 # Define server logic
 server <- function(input, output, session) {
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 1 (INDEX 1)
+  # SERVER LOGIC FOR TAB 1
   # =====================================================
-  # Add reactive expressions, outputs for Tab 1 here
+  
+  # Create the features data frame 
+  feature_df <- data.frame(
+    Feature = c("Pregnancies", "Glucose", "Blood Pressure", "Skin Thickness", 
+                "Insulin", "BMI", "Diabetes Pedigree function", "Age", "Outcome"),
+    Description = c("Number of pregnancies", "Plasma glucose from glucose test (mg/dL)", "Blood pressure (mm Hg)",
+                    "Skin thickness(mm)", "Insulin level", "Body mass index(weight/height)",
+                    "Likelihood of diabetes based on family history index  , from (0-2.5)", "Age in years", "Diabetes (1=Yes, 0=No)"))
+  
+  # use table to visualise the features explanation
+  output$feature_table <- renderTable({
+    feature_df  
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 2 (INDEX 2)
+  # SERVER LOGIC FOR TAB 2
   # =====================================================
-  # Add reactive expressions, outputs for Tab 2 here
+  
+  # Render the interactive Plotly graph for Glucose vs Outcome
+  output$glucosePlot <- renderPlotly({
+    
+    # Create the ggplot with Violin + Jitter overlay
+    # Pre-calculate means for labeling (or let ggplot do it)
+    # round to the nearest whole number for a cleaner visual
+    p <- ggplot(pima_data, aes(x = Outcome, y = Glucose, fill = Outcome)) +
+      
+      # Shaded "Gray Area" rectangle
+      annotate("rect", xmin = -Inf, xmax = Inf, ymin = 100, ymax = 140, 
+               alpha = 0.1, fill = "grey50") +
+      
+      # Main visual layers: Violin + Jitter
+      geom_violin(alpha = 0.6, trim = FALSE, color = "black") +
+      geom_jitter(aes(color = Outcome), width = 0.15, alpha = 0.4, size = 1.2) +
+      
+      # ADDING THE MEANS: Large white diamonds to represent the average
+      stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "white", stroke = 1) +
+      
+      # Labels for the means
+      annotate("text", x = 1, y = 111, label = "Mean: 111", vjust = -1.5, fontface = "bold") +
+      annotate("text", x = 2, y = 142, label = "Mean: 142", vjust = -1.5, fontface = "bold") +
+      
+      # Formatting
+      geom_hline(yintercept = c(100, 140), linetype = "dashed", color = "grey40", alpha = 0.5) +
+      labs(
+        x = "Diabetes Outcome",
+        y = "Plasma Glucose Concentration",
+        title = "Glucose Distribution with Group Means"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "none") +
+      scale_fill_manual(values = c("Non-diabetic" = "#2c7bb6", "Diabetic" = "#d7191c")) +
+      scale_color_manual(values = c("Non-diabetic" = "#2c7bb6", "Diabetic" = "#d7191c"))
+    
+    ggplotly(p)
+  })
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 3 (INDEX 3)
+  # SERVER LOGIC FOR TAB 3
+  # =====================================================
+  
   # Load and prepare data
   full_data <- reactive({
     df <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv")
@@ -170,7 +235,7 @@ server <- function(input, output, session) {
     
     df
   })
-  #filter data based on user input 
+  # Filter data based on user input 
   filtered_data <- reactive({
     df <- full_data()
     
@@ -299,13 +364,39 @@ server <- function(input, output, session) {
     
     p
   })
-}
-  # Add reactive expressions, outputs for Tab 3 here
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 4 (INDEX 4) - OPTIONAL
-
-# Add reactive expressions, outputs for Tab 4 here
+  # SERVER LOGIC FOR TAB 4
+  # =====================================================
+  
+  # Let the data shown adjust accordingly to user input in slider
+  filter_data <- reactive({
+    pima_data %>%
+      filter(`Diabetes pedigree function` >= input$genetic_risk[1],
+             `Diabetes pedigree function` <= input$genetic_risk[2])
+  })
+  # Allows the plot to auto-refresh 
+  output$metabolic_plot <- renderPlotly({
+    # Plotting graph
+    p <- ggplot(filter_data(), aes(x = Glucose, 
+                                     y = Insulin, 
+                                     color = Outcome, 
+                                     size = `Diabetes pedigree function`,
+                                     text = paste("Genetic Risk Index:", `Diabetes pedigree function`))) +
+      geom_point(alpha = 0.6) +
+      scale_size(range = c(1, 10)) +
+      theme_minimal() +
+      labs(x = "Glucose Concentration",
+           y = "Serum Insulin (mu U/ml)",
+           size = "Pedigree Function") +
+      # Colour-blind friendly colours
+      scale_color_manual(values = c("Non-diabetic" = "olivedrab4", "Diabetic" = "red3")) +
+      facet_wrap(~ Outcome) # Splits the data into two facets to reduce overlapping
+    
+    ggplotly(p, tooltip = "text") %>%
+      layout(margin = list(t = 50, b = 50)) # <= Prevent axis labels from being cut off due to render errors
+  })
+}  
 
 # Run the application
 shinyApp(ui=ui, server=server )
