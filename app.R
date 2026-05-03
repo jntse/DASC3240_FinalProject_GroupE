@@ -19,7 +19,7 @@ ui <- fluidPage(
       value = "tab1",
       
  
-      includeMarkdown("Describution.md"),
+      includeMarkdown("tab1_description.md"),
       
       
       mainPanel(
@@ -82,7 +82,7 @@ ui <- fluidPage(
       p("Add your analysis outputs here..."),
       
       # Remove the example above and paste your code here
-      mainPanel(plotOutput("scatterplot"))
+      
       # ==============================================
       # END OF CONTENT FOR TAB 3
       # ==============================================
@@ -147,6 +147,7 @@ server <- function(input, output, session) {
   # =====================================================
   # Add reactive expressions, outputs for Tab 3 here
   
+
   
   
   
