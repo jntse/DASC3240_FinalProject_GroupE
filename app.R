@@ -1,50 +1,57 @@
-#load library 
+# Load library 
 library(shiny)
 library(readxl)
 library(dplyr)
 library(plotly)
+library(markdown)
+library(tidyverse)
+library(plotly)
+
+# Load and clean data
+pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names = FALSE) %>%
+  mutate(
+    Glucose = na_if(Glucose, 0),
+    `Body mass index` = na_if(`Body mass index`, 0),
+    Insulin = na_if(Insulin, 0),
+    Outcome = factor(Outcome, levels = c(0, 1), labels = c("Healthy", "Diabetic"))
+  )
 
 # Define UI
 ui <- fluidPage(
   
-  # Application title (change tha app name when desired the dataset )
-  titlePanel("Your Shiny Application"),
+  # Application title 
+  titlePanel("Visualization of diabetes "),
   
   # Tab layout
   tabsetPanel(
     
-    # =====================================================
-    # TAB 1: [TAB NAME] - POSITION INDEX 1
-    # =====================================================
+    
+    # TAB 1
     tabPanel(
-      title = "Tab 1: Data Overview",  # Change this title
+      title = "Tab 1: Dataset Overview",  
       value = "tab1",
       
-      # ==============================================
-      # START OF CONTENT FOR TAB 1
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR CONTENT HERE:
-      # - Input controls (sliders, dropdowns, etc.)
-      # - Output displays (plots, tables, text)
-      # - Layout elements (sidebar, columns, etc.)
-      # ==============================================
+ 
+      includeMarkdown("tab1_description.md"),
       
-      # Example placeholder content: <---this is shows to display the content of tab1 , please delete it when working 
-      h3("Content for Tab 1"),
-      p("Add your content here..."),
       
-      # Remove the example above and paste your code here
+      mainPanel(
+       
+        tableOutput("feature_table"),
+        hr(),
+        
+        h5('License:'),
+        a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
+      )
       
-      # ==============================================
-      # END OF CONTENT FOR TAB 1
-      # ==============================================
+ 
     ),
     
     # =====================================================
     # TAB 2: [TAB NAME] - POSITION INDEX 2
     # =====================================================
     tabPanel(
-      title = "Tab 2: Data Visualization",  # Change this title( if necessary )
+      title = "Tab 2: Data Visualization",  
       value = "tab2",
       
       # ==============================================
@@ -70,6 +77,7 @@ ui <- fluidPage(
     # =====================================================
     # TAB 3: [TAB NAME] - POSITION INDEX 3
     # =====================================================
+    
     tabPanel(
       title = "Visualization of age and glucose",  # Change this title
       value = "tab3",
@@ -102,34 +110,51 @@ ui <- fluidPage(
       plotlyOutput(outputId = "p")
     ),
     
-    # ==============================================
-    # END OF CONTENT FOR TAB 3
-    # ==============================================
-  
-  # =====================================================
-  # TAB 4: [TAB NAME] - POSITION INDEX 4 (OPTIONAL)
-  # =====================================================
-  # Uncomment the code below to add a 4th tab
-  
-  tabPanel(
-    title = "Tab 4: Reports/Export",  # Change this title
-    value = "tab4",
-    #   
-    #   # ==============================================
-    #   # START OF CONTENT FOR TAB 4
-    #   # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    #   # ADD YOUR REPORT/EXPORT CODE HERE:
-    #   # - Download buttons
-    #   # - Report generation
-    #   # - Export functionality
-    #   # ==============================================
-    #   
-    #   h3("Content for Tab 4"),
-    #   p("Add your export/report code here..."),
-    #   
-    #   # ==============================================
-    #   # END OF CONTENT FOR TAB 4
-    #   # ==============================================
+    # =====================================================
+    # TAB 4: [TAB NAME] - POSITION INDEX 4
+    # =====================================================
+    
+    tabPanel(
+      title = "Tab 4: Metabolic Profiles", 
+      value = "tab4",
+      # Title of the plot
+      h3("Metabolic profiles by Genetic Risk"),
+      p("The purpose of this faceted bubble plot is to provide an understanding of how metabolic health determines the outcome of diabetes (whether you have it or not). Hover over the points to see individual data, and adjust the slider to see the range of outcomes."),
+      
+      # Set layout of plot for better spacing
+      fluidRow(
+        column(width = 12,
+               plotlyOutput(outputId = "metabolic_plot", height = "500px")
+        )
+      ),
+      
+      br(), # <= empty line to seperate contents
+      
+      # Set layout of slider
+      fluidRow(
+        column(width = 8, offset = 1, # <= place slider to middle of graph
+               wellPanel(
+                 sliderInput(
+                   inputId = "genetic_risk", 
+                   label = "Genetic Risk Threshold (Diabetes Pedigree Function)", 
+                   min = min(pima_data$`Diabetes pedigree function`), 
+                   max = max(pima_data$`Diabetes pedigree function`), 
+                   value = c(min(pima_data$`Diabetes pedigree function`), 
+                             max(pima_data$`Diabetes pedigree function`)),
+                   step = 0.05, # <= set to cover all data
+                   width = "100%"
+                 )
+               )
+        )
+      ),
+      
+      # Set layout of markdown content
+      fluidRow(
+        column(width = 12, #offset = 2,
+               includeMarkdown("tab4_description.md")
+        )
+      )
+    )
   )
 )
 )
@@ -138,9 +163,22 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 1 (INDEX 1)
+  # SERVER LOGIC FOR TAB 1
   # =====================================================
-  # Add reactive expressions, outputs for Tab 1 here
+  
+  #create the features data frame 
+  feature_df <- data.frame(
+    Feature = c("Pregnancies", "Glucose", "Blood Pressure", "Skin Thickness", 
+                "Insulin", "BMI", "Diabetes Pedigree function", "Age", "Outcome"),
+    Description = c("Number of pregnancies", "Plasma glucose from glucose test (mg/dL)", "Blood pressure (mm Hg)",
+                    "Skin thickness(mm)", "Insulin level", "Body mass index(weight/height)",
+                    "likelihood of diabetes based on family history index  , from(0-2.5)", "Age in years", "Diabetes (1=Yes, 0=No)"))
+  
+  # use table to visualise the features explanation
+  output$feature_table <- renderTable({
+    feature_df  
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  
   
   # =====================================================
   # SERVER LOGIC FOR TAB 2 (INDEX 2)
@@ -299,10 +337,43 @@ server <- function(input, output, session) {
 }
   # Add reactive expressions, outputs for Tab 3 here
   
-  # =====================================================
-  # SERVER LOGIC FOR TAB 4 (INDEX 4) - OPTIONAL
 
-# Add reactive expressions, outputs for Tab 4 here
+  
+  
+  
+  # =====================================================
+  # SERVER LOGIC FOR TAB 4 (INDEX 4)
+  # =====================================================
+  
+  # Let the data shown adjust accordingly to user input in slider
+  filtered_data <- reactive({
+    pima_data %>%
+      filter(`Diabetes pedigree function` >= input$genetic_risk[1],
+             `Diabetes pedigree function` <= input$genetic_risk[2])
+  })
+  # Allows the plot to auto-refresh 
+  output$metabolic_plot <- renderPlotly({
+    # Plotting graph
+    p <- ggplot(filtered_data(), aes(x = Glucose, 
+                                     y = Insulin, 
+                                     color = Outcome, 
+                                     size = `Diabetes pedigree function`,
+                                     text = paste("Genetic Risk Index:", `Diabetes pedigree function`))) +
+      geom_point(alpha = 0.6) +
+      scale_size(range = c(1, 10)) +
+      theme_minimal() +
+      labs(x = "Glucose Concentration",
+           y = "Serum Insulin (mu U/ml)",
+           size = "Pedigree Function") +
+      # Colour-blind friendly colours
+      scale_color_manual(values = c("Healthy" = "olivedrab4", "Diabetic" = "red3")) +
+      facet_wrap(~ Outcome) # Splits the data into two facets to reduce overlapping
+    
+    ggplotly(p, tooltip = "text") %>%
+      layout(margin = list(t = 50, b = 50)) # <= Prevent axis labels from being cut off due to render errors
+  })
+  
+}
 
 # Run the application
 shinyApp(ui=ui, server=server )
