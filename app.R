@@ -1,9 +1,9 @@
-#load library 
+# Load library 
 library(shiny)
 library(tidyverse)
 library(plotly)
 
-#load and clean data
+# Load and clean data
 pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv")
 pima_cleaned <- pima_data %>%
   filter(Glucose > 0 & Insulin > 0) %>%
@@ -170,7 +170,7 @@ server <- function(input, output, session) {
   # SERVER LOGIC FOR TAB 4 (INDEX 4)
   # =====================================================
   
-  # This is to let the data shown adjust accordingly to user input in slider
+  # Let the data shown adjust accordingly to user input in slider
   filtered_data <- reactive({
     pima_cleaned %>%
       filter(Diabetes.pedigree.function >= input$genetic_risk[1],
@@ -178,7 +178,7 @@ server <- function(input, output, session) {
   })
   # Allows the plot to auto-refresh 
   output$metabolic_plot <- renderPlotly({
-    # Plot
+    # Plotting graph
     p <- ggplot(filtered_data(), aes(x = Glucose, 
                                      y = Insulin, 
                                      color = Outcome, 
