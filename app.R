@@ -18,7 +18,7 @@ pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.nam
 ui <- fluidPage(
   
   # Application title 
-  titlePanel("Visualization of diabetes"),
+  titlePanel("Diabetes Risk Factors: Inside the Pima Indian Data"),
   
   # Tab layout
   tabsetPanel(
@@ -26,7 +26,7 @@ ui <- fluidPage(
     
     # TAB 1
     tabPanel(
-      title = "Tab 1: Dataset Overview",  
+      title = "Tab 1: Dataset introduction",  
       value = "tab1",
       
  
