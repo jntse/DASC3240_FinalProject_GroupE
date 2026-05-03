@@ -1,5 +1,7 @@
 # Load library 
 library(shiny)
+library(markdown)
+
 library(tidyverse)
 library(plotly)
 
@@ -12,44 +14,39 @@ pima_cleaned <- pima_data %>%
 # Define UI
 ui <- fluidPage(
   
-  # Application title (change the app name when desired the dataset)
-  titlePanel("Your Shiny Application"),
+  # Application title 
+  titlePanel("Visualization of diabetes "),
   
   # Tab layout
   tabsetPanel(
     
-    # =====================================================
-    # TAB 1: [TAB NAME] - POSITION INDEX 1
-    # =====================================================
+    
+    # TAB 1
     tabPanel(
-      title = "Tab 1: Data Overview",  # Change this title
+      title = "Tab 1: Dataset Overview",  
       value = "tab1",
       
-      # ==============================================
-      # START OF CONTENT FOR TAB 1
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR CONTENT HERE:
-      # - Input controls (sliders, dropdowns, etc.)
-      # - Output displays (plots, tables, text)
-      # - Layout elements (sidebar, columns, etc.)
-      # ==============================================
+ 
+      includeMarkdown("tab1_description.md"),
       
-      # Example placeholder content: <---this is shows to display the content of tab1 , please delete it when working 
-      h3("Content for Tab 1"),
-      p("Add your content here..."),
       
-      # Remove the example above and paste your code here
+      mainPanel(
+       
+        tableOutput("feature_table"),
+        hr(),
+        
+        h5('License:'),
+        a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
+      )
       
-      # ==============================================
-      # END OF CONTENT FOR TAB 1
-      # ==============================================
+ 
     ),
     
     # =====================================================
     # TAB 2: [TAB NAME] - POSITION INDEX 2
     # =====================================================
     tabPanel(
-      title = "Tab 2: Data Visualization",  # Change this title( if necessary )
+      title = "Tab 2: Data Visualization",  
       value = "tab2",
       
       # ==============================================
@@ -152,9 +149,22 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 1 (INDEX 1)
+  # SERVER LOGIC FOR TAB 1
   # =====================================================
-  # Add reactive expressions, outputs for Tab 1 here
+  
+  #create the features data frame 
+  feature_df <- data.frame(
+    Feature = c("Pregnancies", "Glucose", "Blood Pressure", "Skin Thickness", 
+                "Insulin", "BMI", "Diabetes Pedigree function", "Age", "Outcome"),
+    Description = c("Number of pregnancies", "Plasma glucose from glucose test (mg/dL)", "Blood pressure (mm Hg)",
+                    "Skin thickness(mm)", "Insulin level", "Body mass index(weight/height)",
+                    "likelihood of diabetes based on family history index  , from(0-2.5)", "Age in years", "Diabetes (1=Yes, 0=No)"))
+  
+  # use table to visualise the features explanation
+  output$feature_table <- renderTable({
+    feature_df  
+  }, striped = TRUE, hover = TRUE, bordered = TRUE)
+  
   
   # =====================================================
   # SERVER LOGIC FOR TAB 2 (INDEX 2)
@@ -165,6 +175,10 @@ server <- function(input, output, session) {
   # SERVER LOGIC FOR TAB 3 (INDEX 3)
   # =====================================================
   # Add reactive expressions, outputs for Tab 3 here
+  
+
+  
+  
   
   # =====================================================
   # SERVER LOGIC FOR TAB 4 (INDEX 4)
