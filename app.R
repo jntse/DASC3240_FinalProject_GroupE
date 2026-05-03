@@ -157,13 +157,13 @@ server <- function(input, output, session) {
   # SERVER LOGIC FOR TAB 1
   # =====================================================
   
-  #create the features data frame 
+  # Create the features data frame 
   feature_df <- data.frame(
     Feature = c("Pregnancies", "Glucose", "Blood Pressure", "Skin Thickness", 
                 "Insulin", "BMI", "Diabetes Pedigree function", "Age", "Outcome"),
     Description = c("Number of pregnancies", "Plasma glucose from glucose test (mg/dL)", "Blood pressure (mm Hg)",
                     "Skin thickness(mm)", "Insulin level", "Body mass index(weight/height)",
-                    "likelihood of diabetes based on family history index  , from(0-2.5)", "Age in years", "Diabetes (1=Yes, 0=No)"))
+                    "Likelihood of diabetes based on family history index  , from (0-2.5)", "Age in years", "Diabetes (1=Yes, 0=No)"))
   
   # use table to visualise the features explanation
   output$feature_table <- renderTable({
@@ -174,6 +174,7 @@ server <- function(input, output, session) {
   # =====================================================
   # SERVER LOGIC FOR TAB 2 (INDEX 2)
   # =====================================================
+  
   # Render the interactive Plotly graph for Glucose vs Outcome
   output$glucosePlot <- renderPlotly({
     
