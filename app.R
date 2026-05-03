@@ -149,11 +149,6 @@ server <- function(input, output, session) {
   
   # =====================================================
   # SERVER LOGIC FOR TAB 3 (INDEX 3)
-  # =====================================================
-  # Add reactive expressions, outputs for Tab 3 here
-  
-  # =====================================================
-  # SERVER LOGIC FOR TAB 4 (INDEX 4) - OPTIONAL
   # Load and prepare data
   full_data <- reactive({
     df <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv")
@@ -302,6 +297,11 @@ server <- function(input, output, session) {
     p
   })
 }
+  # Add reactive expressions, outputs for Tab 3 here
+  
+  # =====================================================
+  # SERVER LOGIC FOR TAB 4 (INDEX 4) - OPTIONAL
+
 # Add reactive expressions, outputs for Tab 4 here
 
 # Run the application
