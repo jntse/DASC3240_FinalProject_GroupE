@@ -3,6 +3,7 @@ library(shiny)
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(markdown)
 
 # =====================================================
 # DATA LOADING & CLEANING
@@ -57,24 +58,24 @@ ui <- fluidPage(
     # TAB 2: [TAB NAME] - POSITION INDEX 2
     # =====================================================
     tabPanel(
-      title = "Graph 1: General Overview of the Dataset",  # Change this title( if necessary )
+      title = "General Overview of the Dataset",
       value = "tab2",
       
       # ==============================================
       # START OF CONTENT FOR TAB 2
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR VISUALIZATION CODE HERE:
-      # - Plot outputs (ggplotly, plotly, ggplot2)
-      # - Interactive charts
-      # - Visualization controls
       # ==============================================
       
-      # Example placeholder content: 
       h3("Glucose Distribution by Diagnosis"),
       p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between positive and negative diagnoses."),
       
-      # Output display for the interactive plot
-      plotlyOutput("glucosePlot", height = "500px")
+      # 1. The Interactive Graph
+      plotlyOutput("glucosePlot", height = "500px"),
+      
+      # 2. Visual Divider
+      hr(),
+      
+      # 3. The Markdown Explanation
+      includeMarkdown("graph_explanation.md")
       
       # ==============================================
       # END OF CONTENT FOR TAB 2
