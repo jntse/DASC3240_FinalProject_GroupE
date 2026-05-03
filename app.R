@@ -1,5 +1,16 @@
 # Load library 
 library(shiny)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(markdown)
+
+# =====================================================
+# DATA LOADING & CLEANING
+# =====================================================
+# Read the dataset and replace erroneous 0s with NAs for biological variables
+# Convert Outcome into a Factor (0 = Negative, 1 = Positive)
+pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names=FALSE) %>%
 library(readxl)
 library(plotly)
 library(markdown)
@@ -49,23 +60,24 @@ ui <- fluidPage(
     # TAB 2: [TAB NAME] - POSITION INDEX 2
     # =====================================================
     tabPanel(
-      title = "Tab 2: Data Visualization",  
+      title = "General Overview of the Dataset",
       value = "tab2",
       
       # ==============================================
       # START OF CONTENT FOR TAB 2
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR VISUALIZATION CODE HERE:
-      # - Plot outputs (ggplotly, plotly, ggplot2)
-      # - Interactive charts
-      # - Visualization controls
       # ==============================================
       
-      # Example placeholder content: 
-      h3("Content for Tab 2"),
-      p("Add your visualizations here..."),
+      h3("Glucose Distribution by Diagnosis"),
+      p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between positive and negative diagnoses."),
       
-      # Remove the example above and paste your code here
+      # 1. The Interactive Graph
+      plotlyOutput("glucosePlot", height = "500px"),
+      
+      # 2. Visual Divider
+      hr(),
+      
+      # 3. The Markdown Explanation
+      includeMarkdown("graph_explanation.md")
       
       # ==============================================
       # END OF CONTENT FOR TAB 2
@@ -180,7 +192,43 @@ server <- function(input, output, session) {
   # =====================================================
   # SERVER LOGIC FOR TAB 2 (INDEX 2)
   # =====================================================
-  # Add reactive expressions, outputs for Tab 2 here
+  # Render the interactive Plotly graph for Glucose vs Outcome
+  output$glucosePlot <- renderPlotly({
+    
+    # Create the ggplot with Violin + Jitter overlay
+    # Pre-calculate means for labeling (or let ggplot do it)
+    # round to the nearest whole number for a cleaner visual
+    p <- ggplot(pima_data, aes(x = Outcome, y = Glucose, fill = Outcome)) +
+      
+      # Shaded "Gray Area" rectangle
+      annotate("rect", xmin = -Inf, xmax = Inf, ymin = 100, ymax = 140, 
+               alpha = 0.1, fill = "grey50") +
+      
+      # Main visual layers: Violin + Jitter
+      geom_violin(alpha = 0.6, trim = FALSE, color = "black") +
+      geom_jitter(aes(color = Outcome), width = 0.15, alpha = 0.4, size = 1.2) +
+      
+      # ADDING THE MEANS: Large white diamonds to represent the average
+      stat_summary(fun = mean, geom = "point", shape = 18, size = 4, color = "white", stroke = 1) +
+      
+      # Labels for the means
+      annotate("text", x = 1, y = 111, label = "Mean: 111", vjust = -1.5, fontface = "bold") +
+      annotate("text", x = 2, y = 142, label = "Mean: 142", vjust = -1.5, fontface = "bold") +
+      
+      # Formatting
+      geom_hline(yintercept = c(100, 140), linetype = "dashed", color = "grey40", alpha = 0.5) +
+      labs(
+        x = "Diabetes Outcome",
+        y = "Plasma Glucose Concentration",
+        title = "Glucose Distribution with Group Means"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "none") +
+      scale_fill_manual(values = c("Negative" = "#2c7bb6", "Positive" = "#d7191c")) +
+      scale_color_manual(values = c("Negative" = "#2c7bb6", "Positive" = "#d7191c"))
+    
+    ggplotly(p)
+  })
   
   # =====================================================
   # SERVER LOGIC FOR TAB 3 (INDEX 3)
