@@ -66,7 +66,7 @@ ui <- fluidPage(
       hr(),
       
       # 3. The Markdown Explanation
-      includeMarkdown("graph_explanation.md")
+      includeMarkdown("tab3_description.md")
       
       # ==============================================
       # END OF CONTENT FOR TAB 2
