@@ -24,9 +24,9 @@ Mendeley Data (CC by 4.0) <https://data.mendeley.com/>
 
 -   The repository [[**DASC3240_FinalProject_GroupE**]{.underline}](https://github.com/jntse/DASC3240_FinalProject_GroupE) contains:
 
-    1.   The Shiny App `app.R` containing all our codes
-    2.   Markdown files of each group members in the format of `tab*_description.md`
-    3.   `README` , `.gitignore` , `LICENSE` and others
+    1.  The Shiny App `app.R` containing all our codes
+    2.  Markdown files of each group members in the format of `tab*_description.md`
+    3.  `README` , `.gitignore` , `LICENSE` and others
 
     This repository is created by Tse J Nanette ( as a group leader) of our group. The group members of the repository is Liu Kam Chiu Philip , Liu Kai Chun Jason, The Oliver Ryan and Ma Tak Yi Terry.
 
