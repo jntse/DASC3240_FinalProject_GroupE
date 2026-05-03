@@ -18,7 +18,7 @@ pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.nam
 ui <- fluidPage(
   
   # Application title 
-  titlePanel("Visualization of diabetes "),
+  titlePanel("Visualization of diabetes"),
   
   # Tab layout
   tabsetPanel(
@@ -49,7 +49,7 @@ ui <- fluidPage(
     # TAB 2: [TAB NAME] - POSITION INDEX 2
     # =====================================================
     tabPanel(
-      title = "General Overview of the Dataset",
+      title = "General Overview",
       value = "tab2",
       
       # ==============================================
@@ -78,7 +78,7 @@ ui <- fluidPage(
     # =====================================================
     
     tabPanel(
-      title = "Visualization of age and glucose",  # Change this title
+      title = "Age and Glucose levels",
       value = "tab3",
       
       # ==============================================
@@ -114,7 +114,7 @@ ui <- fluidPage(
     # =====================================================
     
     tabPanel(
-      title = "Tab 4: Metabolic Profiles", 
+      title = "Metabolic Profiles", 
       value = "tab4",
       # Title of the plot
       h3("Metabolic profiles by Genetic Risk"),
