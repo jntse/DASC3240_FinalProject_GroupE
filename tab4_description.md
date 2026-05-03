@@ -18,9 +18,9 @@ The plot is separated into two facets for better readability as there are a lot 
 
 #### What does this plot show?
 
-1.  **High glucose levels signify a higher risk of diabetes.** The healthy group (right) is heavily clustered from around 80 to 130 on the Glucose axis, indicating a healthy concentration of blood sugar. On the contrary, the diabetic group (left) shifts significantly to the right, starting at 130 and reaching up to 200. Thus, those with diabetes tend to have high glucose levels.
+1.  **High glucose levels signify a higher risk of diabetes.** The non-diabetic group (right) is heavily clustered from around 80 to 130 on the Glucose axis, indicating a healthy concentration of blood sugar. On the contrary, the diabetic group (left) shifts significantly to the right, starting at 130 and reaching up to 200. Thus, those with diabetes tend to have high glucose levels.
 
-2.  **Diabetic individuals have more difficulty metabolizing glucose than healthy people.** Glucose and insulin levels positively correlate to each other. In the healthy group, as glucose concentration increases, the body also produces more insulin to compensate for it. There is a clear slope (relationship) between the two. However, the diabetic group has a smaller glucose-insulin slope compared to the healthy group; the body cannot produce enough insulin to break down the glucose. As a result, glucose levels get extremely high.
+2.  **Diabetic individuals have more difficulty metabolizing glucose than those without diabetes.** Glucose and insulin levels positively correlate to each other. In the non-diabetic group, as glucose concentration increases, the body also produces more insulin to compensate for it. There is a clear slope (relationship) between the two. However, the diabetic group has a smaller glucose-insulin slope compared to the non-diabetic group; the body cannot produce enough insulin to break down the glucose. As a result, glucose levels get extremely high.
 
  
 
