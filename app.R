@@ -1,11 +1,9 @@
 # Load library 
 library(shiny)
 library(readxl)
-library(dplyr)
 library(plotly)
 library(markdown)
 library(tidyverse)
-library(plotly)
 
 # Load and clean data
 pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names = FALSE) %>%
@@ -157,7 +155,6 @@ ui <- fluidPage(
     )
   )
 )
-)
 
 # Define server logic
 server <- function(input, output, session) {
@@ -187,6 +184,8 @@ server <- function(input, output, session) {
   
   # =====================================================
   # SERVER LOGIC FOR TAB 3 (INDEX 3)
+  # =====================================================
+  
   # Load and prepare data
   full_data <- reactive({
     df <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv")
@@ -205,7 +204,7 @@ server <- function(input, output, session) {
     
     df
   })
-  #filter data based on user input 
+  # Filter data based on user input 
   filtered_data <- reactive({
     df <- full_data()
     
@@ -334,19 +333,13 @@ server <- function(input, output, session) {
     
     p
   })
-}
-  # Add reactive expressions, outputs for Tab 3 here
-  
-
-  
-  
   
   # =====================================================
   # SERVER LOGIC FOR TAB 4 (INDEX 4)
   # =====================================================
   
   # Let the data shown adjust accordingly to user input in slider
-  filtered_data <- reactive({
+  filter_data <- reactive({
     pima_data %>%
       filter(`Diabetes pedigree function` >= input$genetic_risk[1],
              `Diabetes pedigree function` <= input$genetic_risk[2])
@@ -354,7 +347,7 @@ server <- function(input, output, session) {
   # Allows the plot to auto-refresh 
   output$metabolic_plot <- renderPlotly({
     # Plotting graph
-    p <- ggplot(filtered_data(), aes(x = Glucose, 
+    p <- ggplot(filter_data(), aes(x = Glucose, 
                                      y = Insulin, 
                                      color = Outcome, 
                                      size = `Diabetes pedigree function`,
@@ -372,8 +365,7 @@ server <- function(input, output, session) {
     ggplotly(p, tooltip = "text") %>%
       layout(margin = list(t = 50, b = 50)) # <= Prevent axis labels from being cut off due to render errors
   })
-  
-}
+}  
 
 # Run the application
 shinyApp(ui=ui, server=server )
