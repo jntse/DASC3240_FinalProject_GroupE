@@ -1,10 +1,18 @@
 #load library 
 library(shiny)
+library(tidyverse)
+library(plotly)
+
+#load and clean data
+pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv")
+pima_cleaned <- pima_data %>%
+  filter(Glucose > 0 & Insulin > 0) %>%
+  mutate(Outcome = as.factor(ifelse(Outcome == 1, "Diabetic", "Healthy")))
 
 # Define UI
 ui <- fluidPage(
   
-  # Application title (change tha app name when desired the dataset )
+  # Application title (change the app name when desired the dataset)
   titlePanel("Your Shiny Application"),
   
   # Tab layout
@@ -67,6 +75,7 @@ ui <- fluidPage(
     # =====================================================
     # TAB 3: [TAB NAME] - POSITION INDEX 3
     # =====================================================
+    
     tabPanel(
       title = "Tab 3: Data Analysis",  # Change this title
       value = "tab3",
@@ -92,29 +101,49 @@ ui <- fluidPage(
     ),
     
     # =====================================================
-    # TAB 4: [TAB NAME] - POSITION INDEX 4 (OPTIONAL)
+    # TAB 4: [TAB NAME] - POSITION INDEX 4
     # =====================================================
-    # Uncomment the code below to add a 4th tab
     
-     tabPanel(
-       title = "Tab 4: Reports/Export",  # Change this title
+    tabPanel(
+      title = "Tab 4: Metabolic Profiles", 
       value = "tab4",
-    #   
-    #   # ==============================================
-    #   # START OF CONTENT FOR TAB 4
-    #   # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    #   # ADD YOUR REPORT/EXPORT CODE HERE:
-    #   # - Download buttons
-    #   # - Report generation
-    #   # - Export functionality
-    #   # ==============================================
-    #   
-    #   h3("Content for Tab 4"),
-    #   p("Add your export/report code here..."),
-    #   
-    #   # ==============================================
-    #   # END OF CONTENT FOR TAB 4
-    #   # ==============================================
+      # Title of the plot
+      h3("Metabolic profiles by Genetic Risk"),
+      p("The purpose of this faceted bubble plot is to provide an understanding of how metabolic health determines the outcome of diabetes (whether you have it or not). Hover over the points to see individual data, and adjust the slider to see the range of outcomes."),
+      
+      # Set layout of plot for better spacing
+      fluidRow(
+        column(width = 12,
+               plotlyOutput(outputId = "metabolic_plot", height = "500px")
+        )
+      ),
+      
+      br(), # <= empty line to seperate contents
+      
+      # Set layout of slider
+      fluidRow(
+        column(width = 8, offset = 1, # <= place slider to middle of graph
+               wellPanel(
+                 sliderInput(
+                   inputId = "genetic_risk", 
+                   label = "Genetic Risk Threshold (Diabetes Pedigree Function)", 
+                   min = min(pima_cleaned$Diabetes.pedigree.function), 
+                   max = max(pima_cleaned$Diabetes.pedigree.function), 
+                   value = c(min(pima_cleaned$Diabetes.pedigree.function), 
+                             max(pima_cleaned$Diabetes.pedigree.function)),
+                   step = 0.05, # <= set to cover all data
+                   width = "100%"
+                 )
+               )
+        )
+      ),
+      
+      # Set layout of markdown content
+      fluidRow(
+        column(width = 12, #offset = 2,
+               includeMarkdown("Tab4_description.md")
+        )
+      )
     )
   )
 )
@@ -138,9 +167,36 @@ server <- function(input, output, session) {
   # Add reactive expressions, outputs for Tab 3 here
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 4 (INDEX 4) - OPTIONAL
+  # SERVER LOGIC FOR TAB 4 (INDEX 4)
   # =====================================================
-  # Add reactive expressions, outputs for Tab 4 here
+  
+  # This is to let the data shown adjust accordingly to user input in slider
+  filtered_data <- reactive({
+    pima_cleaned %>%
+      filter(Diabetes.pedigree.function >= input$genetic_risk[1],
+             Diabetes.pedigree.function <= input$genetic_risk[2])
+  })
+  # Allows the plot to auto-refresh 
+  output$metabolic_plot <- renderPlotly({
+    # Plot
+    p <- ggplot(filtered_data(), aes(x = Glucose, 
+                                     y = Insulin, 
+                                     color = Outcome, 
+                                     size = Diabetes.pedigree.function,
+                                     text = paste("Genetic Risk Index:", Diabetes.pedigree.function))) +
+      geom_point(alpha = 0.6) +
+      scale_size(range = c(1, 10)) +
+      theme_minimal() +
+      labs(x = "Glucose Concentration",
+           y = "Serum Insulin (mu U/ml)",
+           size = "Pedigree Function") +
+      # Colour-blind friendly colours
+      scale_color_manual(values = c("Healthy" = "olivedrab4", "Diabetic" = "red3")) +
+      facet_wrap(~ Outcome) # Splits the data into two facets to reduce overlapping
+    
+    ggplotly(p, tooltip = "text") %>%
+      layout(margin = list(t = 50, b = 50)) # <= Prevent axis labels from being cut off due to render errors
+  })
   
 }
 
