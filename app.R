@@ -22,16 +22,15 @@ ui <- fluidPage(
   
   # Tab layout
   tabsetPanel(
+
+    # =====================================================
+    # TAB 1: [Dataset introduction] - POSITION INDEX 1
+    # =====================================================
     
-    
-    # TAB 1
     tabPanel(
       title = "Tab 1: Dataset introduction",  
       value = "tab1",
-      
- 
       includeMarkdown("tab1_description.md"),
-      
       
       mainPanel(
        
@@ -41,20 +40,15 @@ ui <- fluidPage(
         h5('License:'),
         a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
       )
-      
- 
     ),
     
     # =====================================================
-    # TAB 2: [TAB NAME] - POSITION INDEX 2
+    # TAB 2: [General overview] - POSITION INDEX 2
     # =====================================================
+    
     tabPanel(
       title = "General Overview",
       value = "tab2",
-      
-      # ==============================================
-      # START OF CONTENT FOR TAB 2
-      # ==============================================
       
       h3("Glucose Distribution by Diagnosis"),
       p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses."),
@@ -67,41 +61,47 @@ ui <- fluidPage(
       
       # 3. The Markdown Explanation
       includeMarkdown("tab2_description.md")
-      
-      # ==============================================
-      # END OF CONTENT FOR TAB 2
-      # ==============================================
     ),
     
     # =====================================================
-    # TAB 3: [TAB NAME] - POSITION INDEX 3
+    # TAB 3: [Age and glucose levels] - POSITION INDEX 3
     # =====================================================
     
     tabPanel(
       title = "Age and Glucose levels",
       value = "tab3",
       
-      selectizeInput(
-        inputId = "outcome",
-        label = "Select Diabetes Outcome",
-        choices = c("All" = "All", "No Diabetes" = "0", "Diabetes" = "1"),
-        selected = "All"
-      ),
+    includeMarkdown("tab3_description.md"),
+    
+    mainPanel(
       
-      sliderInput(
-        inputId = "age_range",
-        label = "Select Age Range",
-        min = 20,
-        max = 85,
-        value = c(20, 85),
-        step = 1
-      ),
+      tableOutput("feature_table"),
+      hr(),
       
-      plotlyOutput(outputId = "p")
+      h5('License:'),
+      a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
     ),
     
+    selectizeInput(
+      inputId = "outcome",
+      label = "Select Diabetes Outcome",
+      choices = c("All" = "All", "No Diabetes" = "0", "Diabetes" = "1"),
+      selected = "All"
+    ),
+    
+    sliderInput(
+      inputId = "age_range",
+      label = "Select Age Range",
+      min = 20,
+      max = 85,
+      value = c(20, 85),
+      step = 1
+    ),
+    
+    plotlyOutput(outputId = "p")
+  ),
     # =====================================================
-    # TAB 4: [TAB NAME] - POSITION INDEX 4
+    # TAB 4: [Metabolic profiles] - POSITION INDEX 4
     # =====================================================
     
     tabPanel(
@@ -172,7 +172,7 @@ server <- function(input, output, session) {
   
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 2 (INDEX 2)
+  # SERVER LOGIC FOR TAB 2
   # =====================================================
   
   # Render the interactive Plotly graph for Glucose vs Outcome
@@ -214,7 +214,7 @@ server <- function(input, output, session) {
   })
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 3 (INDEX 3)
+  # SERVER LOGIC FOR TAB 3
   # =====================================================
   
   # Load and prepare data
@@ -366,7 +366,7 @@ server <- function(input, output, session) {
   })
   
   # =====================================================
-  # SERVER LOGIC FOR TAB 4 (INDEX 4)
+  # SERVER LOGIC FOR TAB 4
   # =====================================================
   
   # Let the data shown adjust accordingly to user input in slider
