@@ -1,20 +1,9 @@
 # Load library 
 library(shiny)
-library(dplyr)
-library(ggplot2)
-library(plotly)
-library(markdown)
-
-# =====================================================
-# DATA LOADING & CLEANING
-# =====================================================
-# Read the dataset and replace erroneous 0s with NAs for biological variables
-# Convert Outcome into a Factor (0 = Negative, 1 = Positive)
-pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names=FALSE) %>%
-library(readxl)
-library(plotly)
-library(markdown)
 library(tidyverse)
+library(plotly)
+library(markdown)
+library(readxl)
 
 # Load and clean data
 pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names = FALSE) %>%
@@ -68,7 +57,7 @@ ui <- fluidPage(
       # ==============================================
       
       h3("Glucose Distribution by Diagnosis"),
-      p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between positive and negative diagnoses."),
+      p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses."),
       
       # 1. The Interactive Graph
       plotlyOutput("glucosePlot", height = "500px"),
@@ -224,8 +213,8 @@ server <- function(input, output, session) {
       ) +
       theme_minimal() +
       theme(legend.position = "none") +
-      scale_fill_manual(values = c("Negative" = "#2c7bb6", "Positive" = "#d7191c")) +
-      scale_color_manual(values = c("Negative" = "#2c7bb6", "Positive" = "#d7191c"))
+      scale_fill_manual(values = c("Non-diabetic" = "#2c7bb6", "diabetic" = "#d7191c")) +
+      scale_color_manual(values = c("Non-diabetic" = "#2c7bb6", "diabetic" = "#d7191c"))
     
     ggplotly(p)
   })
