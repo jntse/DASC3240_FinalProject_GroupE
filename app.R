@@ -138,7 +138,7 @@ ui <- fluidPage(
       # Set layout of markdown content
       fluidRow(
         column(width = 12, #offset = 2,
-               includeMarkdown("Tab4_description.md")
+               includeMarkdown("tab4_description.md")
         )
       )
     )
