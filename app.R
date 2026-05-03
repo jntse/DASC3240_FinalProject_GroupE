@@ -1,15 +1,17 @@
 # Load library 
 library(shiny)
 library(markdown)
-
 library(tidyverse)
 library(plotly)
 
 # Load and clean data
-pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv")
-pima_cleaned <- pima_data %>%
-  filter(Glucose > 0 & Insulin > 0) %>%
-  mutate(Outcome = as.factor(ifelse(Outcome == 1, "Diabetic", "Healthy")))
+pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.names = FALSE) %>%
+  mutate(
+    Glucose = na_if(Glucose, 0),
+    `Body mass index` = na_if(`Body mass index`, 0),
+    Insulin = na_if(Insulin, 0),
+    Outcome = factor(Outcome, levels = c(0, 1), labels = c("Healthy", "Diabetic"))
+  )
 
 # Define UI
 ui <- fluidPage(
@@ -124,10 +126,10 @@ ui <- fluidPage(
                  sliderInput(
                    inputId = "genetic_risk", 
                    label = "Genetic Risk Threshold (Diabetes Pedigree Function)", 
-                   min = min(pima_cleaned$Diabetes.pedigree.function), 
-                   max = max(pima_cleaned$Diabetes.pedigree.function), 
-                   value = c(min(pima_cleaned$Diabetes.pedigree.function), 
-                             max(pima_cleaned$Diabetes.pedigree.function)),
+                   min = min(pima_data$`Diabetes pedigree function`), 
+                   max = max(pima_data$`Diabetes pedigree function`), 
+                   value = c(min(pima_data$`Diabetes pedigree function`), 
+                             max(pima_data$`Diabetes pedigree function`)),
                    step = 0.05, # <= set to cover all data
                    width = "100%"
                  )
@@ -186,9 +188,9 @@ server <- function(input, output, session) {
   
   # Let the data shown adjust accordingly to user input in slider
   filtered_data <- reactive({
-    pima_cleaned %>%
-      filter(Diabetes.pedigree.function >= input$genetic_risk[1],
-             Diabetes.pedigree.function <= input$genetic_risk[2])
+    pima_data %>%
+      filter(`Diabetes pedigree function` >= input$genetic_risk[1],
+             `Diabetes pedigree function` <= input$genetic_risk[2])
   })
   # Allows the plot to auto-refresh 
   output$metabolic_plot <- renderPlotly({
@@ -196,8 +198,8 @@ server <- function(input, output, session) {
     p <- ggplot(filtered_data(), aes(x = Glucose, 
                                      y = Insulin, 
                                      color = Outcome, 
-                                     size = Diabetes.pedigree.function,
-                                     text = paste("Genetic Risk Index:", Diabetes.pedigree.function))) +
+                                     size = `Diabetes pedigree function`,
+                                     text = paste("Genetic Risk Index:", `Diabetes pedigree function`))) +
       geom_point(alpha = 0.6) +
       scale_size(range = c(1, 10)) +
       theme_minimal() +
