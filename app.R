@@ -10,7 +10,7 @@ pima_data <- read.csv("data/Pima Indians diabetes dataset (PIDD).csv", check.nam
     Glucose = na_if(Glucose, 0),
     `Body mass index` = na_if(`Body mass index`, 0),
     Insulin = na_if(Insulin, 0),
-    Outcome = factor(Outcome, levels = c(0, 1), labels = c("Healthy", "Diabetic"))
+    Outcome = factor(Outcome, levels = c(0, 1), labels = c("Non-diabetic", "Diabetic"))
   )
 
 # Define UI
@@ -207,7 +207,7 @@ server <- function(input, output, session) {
            y = "Serum Insulin (mu U/ml)",
            size = "Pedigree Function") +
       # Colour-blind friendly colours
-      scale_color_manual(values = c("Healthy" = "olivedrab4", "Diabetic" = "red3")) +
+      scale_color_manual(values = c("Non-diabetic" = "olivedrab4", "Diabetic" = "red3")) +
       facet_wrap(~ Outcome) # Splits the data into two facets to reduce overlapping
     
     ggplotly(p, tooltip = "text") %>%
