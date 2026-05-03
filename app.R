@@ -81,15 +81,6 @@ ui <- fluidPage(
       title = "Age and Glucose levels",
       value = "tab3",
       
-      # ==============================================
-      # START OF CONTENT FOR TAB 3
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      # ADD YOUR ANALYSIS CODE HERE:
-      # - Statistical summaries
-      # - Data tables (DT, reactable)
-      # - Analysis outputs
-      # ==============================================
-      
       selectizeInput(
         inputId = "outcome",
         label = "Select Diabetes Outcome",
@@ -146,6 +137,8 @@ ui <- fluidPage(
                )
         )
       ),
+      
+      hr(), # <= visual divider
       
       # Set layout of markdown content
       fluidRow(
@@ -213,8 +206,8 @@ server <- function(input, output, session) {
       ) +
       theme_minimal() +
       theme(legend.position = "none") +
-      scale_fill_manual(values = c("Non-diabetic" = "#2c7bb6", "diabetic" = "#d7191c")) +
-      scale_color_manual(values = c("Non-diabetic" = "#2c7bb6", "diabetic" = "#d7191c"))
+      scale_fill_manual(values = c("Non-diabetic" = "#2c7bb6", "Diabetic" = "#d7191c")) +
+      scale_color_manual(values = c("Non-diabetic" = "#2c7bb6", "Diabetic" = "#d7191c"))
     
     ggplotly(p)
   })
