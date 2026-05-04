@@ -28,7 +28,7 @@ ui <- fluidPage(
     # =====================================================
     
     tabPanel(
-      title = "Tab 1: Dataset introduction",  
+      title = "Dataset introduction",  
       value = "tab1",
       includeMarkdown("tab1_description.md"),
       
@@ -71,17 +71,9 @@ ui <- fluidPage(
       title = "Age and Glucose levels",
       value = "tab3",
       
-    includeMarkdown("tab3_description.md"),
-    
-    mainPanel(
+      h3("Diabetes Prevalence across Different Age Groups"),
+      p("The purpose of this interactive bar chart is to explore how diabetes prevalence changes across different age groups. Hover over the points to see the exact count."),
       
-      tableOutput("feature_table"),
-      hr(),
-      
-      h5('License:'),
-      a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
-    ),
-    
     selectizeInput(
       inputId = "outcome",
       label = "Select Diabetes Outcome",
@@ -98,7 +90,11 @@ ui <- fluidPage(
       step = 1
     ),
     
-    plotlyOutput(outputId = "p")
+    plotlyOutput(outputId = "p"),
+    
+    hr(),
+    
+    includeMarkdown("tab3_description.md")
   ),
     # =====================================================
     # TAB 4: [Metabolic profiles] - POSITION INDEX 4
@@ -107,7 +103,7 @@ ui <- fluidPage(
     tabPanel(
       title = "Metabolic Profiles", 
       value = "tab4",
-      # Title of the plot
+      
       h3("Metabolic profiles by Genetic Risk"),
       p("The purpose of this faceted bubble plot is to provide an understanding of how metabolic health determines the outcome of diabetes (whether you have it or not). Hover over the points to see individual data, and adjust the slider to see the range of outcomes."),
       
