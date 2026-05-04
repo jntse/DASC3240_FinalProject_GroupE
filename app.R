@@ -56,9 +56,7 @@ ui <- fluidPage(
       value = "tab2",
       
       h3("Glucose Distribution by Diagnosis"),
-      wellPanel(
-        p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses.")
-      ),
+        p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses."),
       
       # 1. The Interactive Graph
       plotlyOutput("glucosePlot", height = "500px"),
@@ -79,24 +77,30 @@ ui <- fluidPage(
       
       h3("Diabetes Prevalence across Different Age Groups"),
       p("The purpose of this interactive bar chart is to explore how diabetes prevalence changes across different age groups. Hover over the points to see the exact count."),
-      
-    selectizeInput(
-      inputId = "outcome",
-      label = "Select Diabetes Outcome",
-      choices = c("All" = "All", "No Diabetes" = "0", "Diabetes" = "1"),
-      selected = "All"
+    
+    fluidRow(
+      column(width = 4,
+             wellPanel(
+               selectizeInput(
+                 inputId = "outcome",
+                 label = "Select Diabetes Outcome",
+                 choices = c("All" = "All", "No Diabetes" = "0", "Diabetes" = "1"),
+                 selected = "All"
+               ),
+               
+               sliderInput(
+                 inputId = "age_range",
+                 label = "Select Age Range",
+                 min = 20,
+                 max = 85,
+                 value = c(20, 85),
+                 step = 1
+               )
+             )
+      )
     ),
     
-    sliderInput(
-      inputId = "age_range",
-      label = "Select Age Range",
-      min = 20,
-      max = 85,
-      value = c(20, 85),
-      step = 1
-    ),
-    
-    plotlyOutput(outputId = "p"),
+    plotlyOutput(outputId = "p", height = "500px"),
     
     hr(),
     
