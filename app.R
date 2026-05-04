@@ -28,18 +28,23 @@ ui <- fluidPage(
     # =====================================================
     
     tabPanel(
-      title = "Dataset introduction",  
+      title = "Dataset introduction",
       value = "tab1",
+      
       includeMarkdown("tab1_description.md"),
       
-      mainPanel(
-       
-        tableOutput("feature_table"),
-        hr(),
-        
-        h5('License:'),
-        a("CC BY 4.0", href= "https://creativecommons.org/licenses/by/4.0/deed.en")
-      )
+      br(), # spacing between description and table
+      
+      fluidRow(
+        column(width = 8,
+               tableOutput("feature_table")
+        )
+      ),
+      
+      hr(), # visual divider before license
+      
+      h5('License:'),
+      a("CC BY 4.0", href = "https://creativecommons.org/licenses/by/4.0/deed.en")
     ),
     
     # =====================================================
@@ -51,7 +56,9 @@ ui <- fluidPage(
       value = "tab2",
       
       h3("Glucose Distribution by Diagnosis"),
-      p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses."),
+      wellPanel(
+        p("This interactive violin and jitter plot provides a high-level overview of Glucose, the most predictive variable in the dataset. Hover over the points to see individual patient data, including the 'gray area' overlap between diabetic and non-diabetic diagnoses.")
+      ),
       
       # 1. The Interactive Graph
       plotlyOutput("glucosePlot", height = "500px"),
@@ -66,7 +73,6 @@ ui <- fluidPage(
     # =====================================================
     # TAB 3: [Age and glucose levels] - POSITION INDEX 3
     # =====================================================
-    
     tabPanel(
       title = "Age and Glucose levels",
       value = "tab3",
@@ -99,56 +105,52 @@ ui <- fluidPage(
     # =====================================================
     # TAB 4: [Metabolic profiles] - POSITION INDEX 4
     # =====================================================
-    
     tabPanel(
-      title = "Metabolic Profiles", 
+      title = "Metabolic Profiles",
       value = "tab4",
       
       h3("Metabolic profiles by Genetic Risk"),
       p("The purpose of this faceted bubble plot is to provide an understanding of how metabolic health determines the outcome of diabetes (whether you have it or not). Hover over the points to see individual data, and adjust the slider to see the range of outcomes."),
       
-      # Set layout of plot for better spacing
+      # Plot
       fluidRow(
         column(width = 12,
                plotlyOutput(outputId = "metabolic_plot", height = "500px")
         )
       ),
       
-      br(), # <= empty line to seperate contents
+      br(),
       
-      # Set layout of slider
+      # Slider - more compact
       fluidRow(
-        column(width = 8, offset = 1, # <= place slider to middle of graph
+        column(width = 6, offset = 0,
                wellPanel(
                  sliderInput(
-                   inputId = "genetic_risk", 
-                   label = "Genetic Risk Threshold (Diabetes Pedigree Function)", 
-                   min = min(pima_data$`Diabetes pedigree function`), 
-                   max = max(pima_data$`Diabetes pedigree function`), 
-                   value = c(min(pima_data$`Diabetes pedigree function`), 
+                   inputId = "genetic_risk",
+                   label = "Genetic Risk Threshold (Diabetes Pedigree Function)",
+                   min = min(pima_data$`Diabetes pedigree function`),
+                   max = max(pima_data$`Diabetes pedigree function`),
+                   value = c(min(pima_data$`Diabetes pedigree function`),
                              max(pima_data$`Diabetes pedigree function`)),
-                   step = 0.05, # <= set to cover all data
+                   step = 0.05,
                    width = "100%"
                  )
                )
         )
       ),
       
-      hr(), # <= visual divider
+      hr(),
       
-      # Set layout of markdown content
+      # Markdown with margins
       fluidRow(
-        column(width = 12, #offset = 2,
+        column(width = 10, offset = 1,
                includeMarkdown("tab4_description.md")
         )
       )
-    )
-  )
-)
-
-# Define server logic
+    )   
+  )     
+)     
 server <- function(input, output, session) {
-  
   # =====================================================
   # SERVER LOGIC FOR TAB 1
   # =====================================================
@@ -386,7 +388,7 @@ server <- function(input, output, session) {
            y = "Serum Insulin (mu U/ml)",
            size = "Pedigree Function") +
       # Colour-blind friendly colours
-      scale_color_manual(values = c("Non-diabetic" = "olivedrab4", "Diabetic" = "red3")) +
+      scale_color_manual(values = c("Non-diabetic" = "#1f77b4", "Diabetic" = "red3")) +
       facet_wrap(~ Outcome) # Splits the data into two facets to reduce overlapping
     
     ggplotly(p, tooltip = "text") %>%
