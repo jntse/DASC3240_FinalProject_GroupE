@@ -50,4 +50,6 @@ Students may use generative AI tools during assignment, for example, to check an
 Tse J Nanette: As the owner of the repository and group leader, I used AI to compare datasets and brainstorm graph styles for the group. Generative AI was also used in resolving merge conflicts and to check for bugs in the code after merging the branches (there were a lot of errors).
 
 Liu Kai Chun: During the assignment, I used AI to refactor code and debug syntax errors; I subsequently reviewed and edited the code and take full responsibility for the final version of the code.
+
+THE, Oliver Ryan: I used AI to help wtih code refactoring and checking, i have reviewed and edited the code and take full responsibility for the final version of the code.
 :::
